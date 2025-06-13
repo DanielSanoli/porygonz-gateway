@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gymleader-api
+  cloud:
+    gateway:
+      routes:
+        - id: gymleader-service
+          uri: lb://gymleader-api
+          predicates:
+            - Path=/api/pokemon/**
+    loadbalancer:
+      ribbon:
+        enabled: false  
+    
+    discovery:
+      client:
+        simple:
+          instances:
+            gymleader-api:
+              - uri: http://localhost:8081 
