@@ -3,21 +3,40 @@ server:
 
 spring:
   application:
-    name: gymleader-api
+    name: porygonz-gateway
+
   cloud:
     gateway:
+      globalcors:
+        corsConfigurations:
+          "[/**]":
+            allowedOrigins:
+              - "http://localhost:4200"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+
       routes:
         - id: gymleader-service
           uri: lb://gymleader-api
           predicates:
-            - Path=/api/pokemon/**
+            - Path=/api/compare/**
+          filters:
+            - RewritePath=/api/compare/(?<segment>.*), /pokemon/${segment}
+
     loadbalancer:
       ribbon:
-        enabled: false  
-    
+        enabled: false
+
     discovery:
       client:
         simple:
           instances:
             gymleader-api:
-              - uri: http://localhost:8081 
+              - uri: http://localhost:8081
