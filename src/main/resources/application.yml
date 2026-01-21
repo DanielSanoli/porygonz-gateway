@@ -10,8 +10,7 @@ spring:
       globalcors:
         corsConfigurations:
           "[/**]":
-            allowedOrigins:
-              - "http://localhost:4200"
+            allowedOrigins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
             allowedMethods:
               - GET
               - POST
@@ -23,20 +22,14 @@ spring:
             allowCredentials: true
 
       routes:
-        - id: gymleader-service
-          uri: lb://gymleader-api
+        # gym-leader (Pokedex API)
+        - id: gymleader-pokemon
+          uri: ${GYMLEADER_URI:http://localhost:8081}
           predicates:
-            - Path=/api/compare/**
-          filters:
-            - RewritePath=/api/compare/(?<segment>.*), /pokemon/${segment}
+            - Path=/api/v1/pokemon/**
 
-    loadbalancer:
-      ribbon:
-        enabled: false
-
-    discovery:
-      client:
-        simple:
-          instances:
-            gymleader-api:
-              - uri: http://localhost:8081
+        # typematch (Comparator API)
+        - id: typematch-compare
+          uri: ${TYPEMATCH_URI:http://localhost:8082}
+          predicates:
+            - Path=/api/v1/compare/**

@@ -11,14 +11,19 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class LoggingFilter implements GlobalFilter {
-    
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        logger.info("Request received: {} {}", 
-            exchange.getRequest().getMethod(), 
-            exchange.getRequest().getPath());
+        String correlationId = exchange.getRequest().getHeaders().getFirst(CorrelationIdFilter.CORRELATION_ID_HEADER);
+
+        logger.info("Request received: {} {} correlationId={}",
+                exchange.getRequest().getMethod(),
+                exchange.getRequest().getPath(),
+                correlationId
+        );
+
         return chain.filter(exchange);
     }
 }
