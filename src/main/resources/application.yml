@@ -22,14 +22,17 @@ spring:
             allowCredentials: true
 
       routes:
-        # gym-leader (Pokedex API)
         - id: gymleader-pokemon
-          uri: ${GYMLEADER_URI:http://localhost:8081}
+          uri: ${GYMLEADER_URI:http://gym-leader:8081}
           predicates:
             - Path=/api/v1/pokemon/**
 
-        # typematch (Comparator API)
         - id: typematch-compare
-          uri: ${TYPEMATCH_URI:http://localhost:8082}
+          uri: ${TYPEMATCH_URI:http://typematch:8082}
           predicates:
             - Path=/api/v1/compare/**
+
+        - id: fusion-ia-fusions
+          uri: ${FUSION_URI:http://localhost:8000}
+          predicates:
+            - Path=/api/v1/fusions/**
